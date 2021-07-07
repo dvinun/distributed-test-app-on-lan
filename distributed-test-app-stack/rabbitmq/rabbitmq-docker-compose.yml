@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  rabbit-mq:
+    image: 127.0.0.1:5000/rabbit-mq
+    build:
+        context: ./
+        dockerfile: ./rabbitmq-dockerfile.yml

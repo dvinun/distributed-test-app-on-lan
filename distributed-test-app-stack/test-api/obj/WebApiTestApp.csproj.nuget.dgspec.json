@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Vinu\\Projects\\Personal\\distributed-test-app-on-lan\\distributed-test-app-stack\\test-app\\WebApiTestApp.csproj": {}
+  },
+  "projects": {
+    "C:\\Vinu\\Projects\\Personal\\distributed-test-app-on-lan\\distributed-test-app-stack\\test-app\\WebApiTestApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Vinu\\Projects\\Personal\\distributed-test-app-on-lan\\distributed-test-app-stack\\test-app\\WebApiTestApp.csproj",
+        "projectName": "WebApiTestApp",
+        "projectPath": "C:\\Vinu\\Projects\\Personal\\distributed-test-app-on-lan\\distributed-test-app-stack\\test-app\\WebApiTestApp.csproj",
+        "packagesPath": "C:\\Users\\vinayaka.contractor.GVLAN\\.nuget\\packages\\",
+        "outputPath": "C:\\Vinu\\Projects\\Personal\\distributed-test-app-on-lan\\distributed-test-app-stack\\test-app\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vinayaka.contractor.GVLAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://pkgs.dev.azure.com/dvinun/_packaging/PartsUnlimitedShared/nuget/v3/index.json": {},
+          "https://www.nuget.org/api/v2": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.9.10, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.2.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

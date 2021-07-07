@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  redis-sentinel:
+    image: 127.0.0.1:5000/redis-sentinel
+    ports:
+      - '26379:26379'
+    build:
+      context: ./
+      dockerfile: ./sentinel-dockerfile.yml

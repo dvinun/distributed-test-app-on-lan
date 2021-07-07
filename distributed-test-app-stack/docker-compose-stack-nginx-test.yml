@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+    reverseproxy:
+        image: nginx
+        ports:
+          - "8083:80"
+          - "443:443"
+        deploy:
+          mode: replicated
+          replicas: 3
+        networks:
+          - distributed-test-app-net
+        command: [nginx-debug, '-g', 'daemon off;']
+
+networks:
+  distributed-test-app-net:
+     name: bridge
+     external: true

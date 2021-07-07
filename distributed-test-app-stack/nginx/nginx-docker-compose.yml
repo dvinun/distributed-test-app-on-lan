@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  reverseproxy:
+    image: 127.0.0.1:5000/nginx-rproxy
+    build:
+        context: ./
+        dockerfile: ./nginx-dockerfile.yml
+    ports:
+      - "8013:8013"
+    # tty: true
+    # command: tail -f /dev/null

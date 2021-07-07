@@ -1,0 +1,42 @@
+FROM rabbitmq:3.8.17-management
+ # Please ignore the commented lines. They are just there for troubleshooting. 
+    
+ # RUN rm -rf /var/lib/rabbitmq/.erlang.cookie
+ COPY rabbitmq.conf /etc/rabbitmq/
+ # COPY .erlang.cookie $HOME/.erlang.cookie
+ # COPY rabbitmq-env.conf /etc/rabbitmq/
+ COPY definitions.json /etc/rabbitmq/
+ COPY rabbitmq-entrypoint.sh /usr/local/bin/
+
+ RUN chmod -R 755 /etc/rabbitmq
+ RUN chmod ugo+rw /etc/rabbitmq
+ RUN chmod +xrw /etc/rabbitmq/rabbitmq.conf
+ # RUN chmod 600 $HOME/.erlang.cookie
+ # RUN chown rabbitmq:rabbitmq $HOME/.erlang.cookie
+ # RUN chmod 700 $HOME/.erlang.cookie
+ # RUN chmod +xrw $HOME/.erlang.cookie
+ 
+ # RUN chmod +xrw /etc/rabbitmq/rabbitmq-env.conf
+ RUN chmod +xrw /etc/rabbitmq/definitions.json
+ RUN chmod +xrw /usr/local/bin/rabbitmq-entrypoint.sh
+ RUN chmod 666 /etc/rabbitmq/* 
+
+ EXPOSE 1883
+ EXPOSE 8883
+ EXPOSE 5672
+ EXPOSE 5673
+ EXPOSE 5674
+ EXPOSE 15672
+ EXPOSE 15673
+ EXPOSE 15674
+ EXPOSE 25672
+ EXPOSE 4369
+ EXPOSE 9100
+ EXPOSE 9101
+ EXPOSE 9102
+ EXPOSE 9103
+ EXPOSE 9104
+ EXPOSE 9105
+
+# ENTRYPOINT ["rabbitmq-entrypoint.sh"]
+cmd rabbitmq-entrypoint.sh

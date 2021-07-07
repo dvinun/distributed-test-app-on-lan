@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  redis:
+    image: 127.0.0.1:5000/redis
+    ports:
+      - '6379:6379'
+    build:
+      context: ./
+      dockerfile: ./redis-dockerfile.yml

@@ -1,0 +1,166 @@
+version: "3.8"
+services:
+
+  redis-sentinel:
+    image: 127.0.0.1:5000/redis-sentinel
+    volumes:
+      - sentinel-conf:/etc/redis
+    deploy:
+      mode: replicated
+      replicas: 3
+    environment:
+      # - REDIS_MASTER_IP=${REDIS_MASTER_IP}
+      # - REDIS_MASTER_HOSTNAME=${REDIS_MASTER_HOSTNAME}
+      - REDIS_MASTER_SERVICENAME=${REDIS_MASTER_SERVICENAME}
+      - SENTINEL_DOWN_AFTER=5000
+      - SENTINEL_FAILOVER=15000
+    networks:
+      - redis-net
+    depends_on:
+      - redis-master
+      - redis-slave1
+      - redis-slave2
+      
+  redis-master:
+    image: 127.0.0.1:5000/redis
+    volumes:
+      - redis-data:/data
+      - redis-conf:/etc/redis
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == ${REDIS_MASTER_HOSTNAME}
+    networks:
+      - redis-net
+
+  redis-slave1:
+    image: 127.0.0.1:5000/redis
+    volumes:
+      - redis-data:/data
+      - redis-conf:/etc/redis
+    environment:
+      - REDIS_MASTER_SERVICENAME=${REDIS_MASTER_SERVICENAME}
+      # - REDIS_MASTER_IP=${REDIS_MASTER_IP}
+      # - REDIS_MASTER_HOSTNAME=${REDIS_MASTER_HOSTNAME}
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == ${REDIS_SLAVE_NODE1_HOSTNAME}
+    networks:
+      - redis-net
+
+  redis-slave2:
+    image: 127.0.0.1:5000/redis
+    volumes:
+      - redis-data:/data
+      - redis-conf:/etc/redis
+    environment:
+      - REDIS_MASTER_SERVICENAME=${REDIS_MASTER_SERVICENAME}
+      # - REDIS_MASTER_IP=${REDIS_MASTER_IP}
+      # - REDIS_MASTER_HOSTNAME=${REDIS_MASTER_HOSTNAME}
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == ${REDIS_SLAVE_NODE2_HOSTNAME}
+    networks:
+      - redis-net
+      
+  rabbit-mq1:
+    image: 127.0.0.1:5000/rabbit-mq
+    hostname: ${RABBITMQ_MASTER_HOSTNAME}  
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == ${RABBITMQ_MASTER_HOSTNAME}
+    environment:
+      - RABBITMQ_NODENAME=rabbit@${RABBITMQ_MASTER_SERVICENAME}
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_ERLANG_COOKIE=abcdef12345!@
+      - RABBITMQ_LOGS=/var/log/rabbitmq/      
+    networks:
+      - rabbit-mq-net
+
+  rabbit-mq2:
+    image: 127.0.0.1:5000/rabbit-mq
+    hostname: ${RABBITMQ_SLAVE_NODE1_HOSTNAME}
+    depends_on:
+      - rabbit-mq1  
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == ${RABBITMQ_SLAVE_NODE1_HOSTNAME}
+    environment:
+      - CLUSTERED=true
+      - CLUSTER_WITH=${RABBITMQ_MASTER_SERVICENAME}
+      - RAM_NODE=true 
+      - RABBITMQ_NODENAME=rabbit@${RABBITMQ_SLAVE_NODE1_SERVICENAME}
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest  
+      - RABBITMQ_ERLANG_COOKIE=abcdef12345!@
+      - RABBITMQ_LOGS=/var/log/rabbitmq/      
+    networks:
+      - rabbit-mq-net
+      
+  rabbit-mq3:
+    image: 127.0.0.1:5000/rabbit-mq
+    hostname: ${RABBITMQ_SLAVE_NODE2_HOSTNAME}
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == ${RABBITMQ_SLAVE_NODE2_HOSTNAME}
+    depends_on:
+      - rabbit-mq1  
+    environment:
+      - CLUSTERED=true
+      - CLUSTER_WITH=${RABBITMQ_MASTER_SERVICENAME}
+      - RABBITMQ_NODENAME=rabbit@${RABBITMQ_SLAVE_NODE2_SERVICENAME}
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest   
+      - RABBITMQ_ERLANG_COOKIE=abcdef12345!@  
+      - RABBITMQ_LOGS=/var/log/rabbitmq/      
+    networks:
+      - rabbit-mq-net
+      
+  test-api:
+    image: 127.0.0.1:5000/test-api
+    deploy:
+      mode: replicated
+      replicas: 3
+    environment:
+      # - SENTINEL_HOSTNAME=${SENTINEL_HOSTNAME}
+      - SENTINEL_SERVICENAME=${SENTINEL_SERVICENAME}
+      # - SENTINEL_IP=${SENTINEL_IP}
+    networks:
+      - distributed-test-app-net
+      - redis-net
+      
+  nginx-rproxy:
+    image: 127.0.0.1:5000/reverseproxy
+    ports:
+      - "8013:8013"
+    deploy:
+      mode: replicated
+      replicas: 3
+    networks:
+      - nginx-rproxy-net
+      - distributed-test-app-net
+
+volumes:
+  redis-data:
+  redis-conf:
+  sentinel-conf:
+  
+networks:
+  distributed-test-app-net:
+  redis-net:
+  nginx-rproxy-net:
+  rabbit-mq-net:
+  
+#end of file

@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  test-app-py:
+    image: 127.0.0.1:5000/test-app-py
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.yml
